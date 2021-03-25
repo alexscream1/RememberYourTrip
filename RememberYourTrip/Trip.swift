@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Trip {
-    var place: String
-    var started: Date
-}
+//struct Trip {
+//    var place: String
+//    var started: Date
+//}
