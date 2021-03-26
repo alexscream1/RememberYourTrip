@@ -21,5 +21,19 @@ struct CoreDataManager {
         return container
     }()
     
-
+    // Fetch trips from core data
+    func fetchTrips() -> [Trip] {
+        let context = persistantContainer.viewContext
+        let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
+        do {
+            let fetchTrips = try context.fetch(fetchRequest)
+            return fetchTrips
+            
+        } catch let error {
+            print("Failed to fetch data:", error)
+            return []
+        }
+    }
 }
+
+
