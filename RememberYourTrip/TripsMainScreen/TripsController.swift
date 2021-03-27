@@ -8,10 +8,11 @@
 import UIKit
 import CoreData
 
-let cellID = "cellID"
+
 
 class TripsController: UITableViewController {
 
+    let cellID = "cellID"
     var trips = [Trip]()
     
     override func viewDidLoad() {
@@ -27,7 +28,8 @@ class TripsController: UITableViewController {
         tableView.separatorColor = .white
         
         navigationItem.title = "Trips"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "plus"), style: .plain, target: self, action: #selector(handleAddTrip))
+        
+        setupPlusButton(selector: #selector(handleAddTrip))
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Remove all", style: .plain, target: self, action: #selector(handleRemoveAll))
         
@@ -36,7 +38,7 @@ class TripsController: UITableViewController {
     
     // Remove all trips button pressed
     @objc private func handleRemoveAll() {
-        let context = CoreDataManager.shared.persistantContainer.viewContext
+        let context = CoreDataManager.shared.persistentContainer.viewContext
         
         let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: Trip.fetchRequest())
         

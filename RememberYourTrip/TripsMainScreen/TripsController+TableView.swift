@@ -15,6 +15,14 @@ extension TripsController {
         return 100
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let trip = trips[indexPath.row]
+        let tripDetailsController = TripDetailsController()
+        tripDetailsController.trip = trip
+        navigationController?.pushViewController(tripDetailsController, animated: true)
+    }
+    
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
         // Delete action for row
@@ -27,7 +35,7 @@ extension TripsController {
             self.tableView.deleteRows(at: [indexPath], with: .automatic)
         
             // Remove from core data
-            let context = CoreDataManager.shared.persistantContainer.viewContext
+            let context = CoreDataManager.shared.persistentContainer.viewContext
             
             context.delete(trip)
             
@@ -87,6 +95,7 @@ extension TripsController {
     }
     
     
+    
     // MARK: - UITableViewDataSource
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -102,3 +111,5 @@ extension TripsController {
         return cell
     }
 }
+
+

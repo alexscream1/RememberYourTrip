@@ -39,61 +39,45 @@ class CreateTripController: UIViewController {
         }
     }
     
-    private func setupCircularImageStyle() {
-        tripImageView.layer.cornerRadius = tripImageView.frame.width / 2
-        tripImageView.clipsToBounds = true
-        tripImageView.layer.borderWidth = 2
-        tripImageView.layer.borderColor = UIColor.darkBlue.cgColor
-    }
-    
     let placeLabel : UILabel = {
         let label = UILabel()
         label.text = "Place"
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     let placeTextField : UITextField = {
         let tf = UITextField()
         tf.placeholder = "Enter trip place"
-        tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
     }()
     
     let moneyLabel : UILabel = {
         let label = UILabel()
         label.text = "Money"
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     let moneyTextField : UITextField = {
         let tf = UITextField()
-        tf.placeholder = "Enter money that you spend $"
-        tf.translatesAutoresizingMaskIntoConstraints = false
+        tf.placeholder = "Enter money that you spend"
         return tf
     }()
     
     let startedDatePicker : UIDatePicker = {
         let dp = UIDatePicker()
         dp.datePickerMode = .date
-        //dp.preferredDatePickerStyle = .wheels
-        dp.translatesAutoresizingMaskIntoConstraints = false
         return dp
     }()
     
     let finishedDatePicker : UIDatePicker = {
         let dp = UIDatePicker()
         dp.datePickerMode = .date
-        //dp.preferredDatePickerStyle = .wheels
-        dp.translatesAutoresizingMaskIntoConstraints = false
         return dp
     }()
     
     lazy var tripImageView : UIImageView = {
         let iv = UIImageView(image: #imageLiteral(resourceName: "select_photo_empty"))
         iv.isUserInteractionEnabled = true
-        iv.translatesAutoresizingMaskIntoConstraints = false
         iv.contentMode = .scaleAspectFill
         iv.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSelectPhoto)))
         return iv
@@ -106,9 +90,9 @@ class CreateTripController: UIViewController {
         view.backgroundColor = .darkBlue
         
         navigationItem.title = "Create Trip"
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelButton))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveButton))
         
+        setupSaveButton(selector: #selector(saveButton))
+        setupCancelButton()
         setupNavBarStyle()
         
     }
@@ -117,10 +101,6 @@ class CreateTripController: UIViewController {
         super.viewWillAppear(animated)
         
         navigationItem.title = trip == nil ? "Create Trip" : "Edit Trip"
-    }
-    
-    @objc private func cancelButton() {
-        dismiss(animated: true, completion: nil)
     }
     
     
@@ -144,7 +124,7 @@ class CreateTripController: UIViewController {
     
     private func createTrip() {
         // Initialize Core Data Stack
-        let context = CoreDataManager.shared.persistantContainer.viewContext
+        let context = CoreDataManager.shared.persistentContainer.viewContext
         
         let trip = NSEntityDescription.insertNewObject(forEntityName: "Trip", into: context)
         
@@ -157,10 +137,7 @@ class CreateTripController: UIViewController {
             let imageData = tripImage.jpegData(compressionQuality: 0.8)
             trip.setValue(imageData, forKey: "imageData")
         }
-        
-        
-        
-        
+  
         // Perform save to core data
         do {
             try context.save()
@@ -175,7 +152,7 @@ class CreateTripController: UIViewController {
     }
     
     private func saveTripChanges() {
-        let context = CoreDataManager.shared.persistantContainer.viewContext
+        let context = CoreDataManager.shared.persistentContainer.viewContext
         
         trip?.place = placeTextField.text
         trip?.finished = finishedDatePicker.date
@@ -202,91 +179,48 @@ class CreateTripController: UIViewController {
     private func setupUI() {
         
         // Background view
-        let backgroundView = UIView()
-        backgroundView.backgroundColor = .lightBlue
-        backgroundView.translatesAutoresizingMaskIntoConstraints = false
-
-        view.addSubview(backgroundView)
-        backgroundView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        backgroundView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        backgroundView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        backgroundView.heightAnchor.constraint(equalToConstant: 400).isActive = true
+        let backgroundView = setupBackgroundView(height: 400)
+        
         
         // Image View
         view.addSubview(tripImageView)
-        tripImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
-        tripImageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
-        tripImageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        tripImageView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 16, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 100, height: 100)
         tripImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        
-
+       
         // Trip Place label
         view.addSubview(placeLabel)
-        placeLabel.topAnchor.constraint(equalTo: tripImageView.bottomAnchor).isActive = true
-        placeLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
-        placeLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        placeLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        placeLabel.anchor(top: tripImageView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 16, paddingBottom: 0, paddingRight: 0, width: 100, height: 50)
         
         // Trip Place textfield
         view.addSubview(placeTextField)
-
-        placeTextField.leftAnchor.constraint(equalTo: placeLabel.rightAnchor).isActive = true
-        placeTextField.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        placeTextField.topAnchor.constraint(equalTo: placeLabel.topAnchor).isActive = true
+        placeTextField.anchor(top: placeLabel.topAnchor, left: placeLabel.rightAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         placeTextField.centerYAnchor.constraint(equalTo: placeLabel.centerYAnchor).isActive = true
-      
+        
         // Trip Money label
         view.addSubview(moneyLabel)
-        moneyLabel.topAnchor.constraint(equalTo: placeLabel.bottomAnchor).isActive = true
-        moneyLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
-        moneyLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        moneyLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        moneyLabel.anchor(top: placeLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 16, paddingBottom: 0, paddingRight: 0, width: 100, height: 50)
         
         // Trip Money textfield
         view.addSubview(moneyTextField)
-        moneyTextField.leftAnchor.constraint(equalTo: moneyLabel.rightAnchor).isActive = true
-        moneyTextField.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        moneyTextField.topAnchor.constraint(equalTo: moneyLabel.topAnchor).isActive = true
+        moneyTextField.anchor(top: moneyLabel.topAnchor, left: moneyLabel.rightAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         moneyTextField.centerYAnchor.constraint(equalTo: moneyLabel.centerYAnchor).isActive = true
-        
+       
         // Date Started datepicker
-        
         view.addSubview(startedDatePicker)
-        startedDatePicker.topAnchor.constraint(equalTo: moneyLabel.bottomAnchor).isActive = true
-        startedDatePicker.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        startedDatePicker.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        startedDatePicker.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        startedDatePicker.anchor(top: moneyLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 50)
         
         // Date Finished datepicker
-        
         view.addSubview(finishedDatePicker)
-        finishedDatePicker.topAnchor.constraint(equalTo: startedDatePicker.bottomAnchor).isActive = true
-        finishedDatePicker.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor).isActive = true
-        finishedDatePicker.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        finishedDatePicker.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        finishedDatePicker.anchor(top: startedDatePicker.bottomAnchor, left: view.leftAnchor, bottom: backgroundView.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+    }
+    
+    func setupCircularImageStyle() {
+        tripImageView.layer.cornerRadius = tripImageView.frame.width / 2
+        tripImageView.clipsToBounds = true
+        tripImageView.layer.borderWidth = 2
+        tripImageView.layer.borderColor = UIColor.darkBlue.cgColor
     }
 }
 
 
-// MARK: - UIImagePickerControllerDelegate, UINavigationControllerDelegate
-extension CreateTripController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        
-        
-        if let editedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
-            tripImageView.image = editedImage
-        } else if let originalImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-            tripImageView.image = originalImage
-        }
-        
-        setupCircularImageStyle()
-        
-        dismiss(animated: true, completion: nil)
-    }
-    
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        dismiss(animated: true, completion: nil)
-    }
-}
+
