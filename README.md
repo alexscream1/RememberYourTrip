@@ -4,9 +4,9 @@ Application to save information about your current or previous travel trips. You
 All information saved with CoreData.
 
 
-❮img src="photos/trip.jpg" width="100" ❯
+❮img src="photos/trip.jpg" width="100"❯
 
-❮img src="photos/trip2.jpg" width="100" ❯
+❮img src="photos/trip2.jpg" width="100"❯
 
-❮img src="photos/trip3.jpg" width="100" ❯
+❮img src="photos/trip3.jpg" width="100"❯
 
