@@ -24,6 +24,35 @@ extension TripDetailsController {
         return UITableView.automaticDimension
     }
     
+    // Delete place
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        // Delete action for row
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (_, _, _) in
+            
+            let place = self.allPlaces[indexPath.section][indexPath.row]
+            
+            // Remove from table view
+            self.allPlaces[indexPath.section].remove(at: indexPath.row)
+            self.tableView.deleteRows(at: [indexPath], with: .automatic)
+        
+            // Remove from core data
+            let context = CoreDataManager.shared.persistentContainer.viewContext
+            
+            context.delete(place)
+            
+            do {
+                try context.save()
+            } catch let error {
+                print("Failed to save data", error)
+            }
+        }
+        
+        // Set action colors
+        deleteAction.backgroundColor = .lightRed
+        
+        let swipeActions = UISwipeActionsConfiguration(actions: [deleteAction])
+        return swipeActions
+    }
     
     // TableView Header
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -43,6 +72,7 @@ extension TripDetailsController {
         }
     }
     
+
     
     // MARK: - Table view data source
     

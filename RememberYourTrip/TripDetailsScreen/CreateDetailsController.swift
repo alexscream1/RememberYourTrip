@@ -19,7 +19,7 @@ class CreateDetailsController: UIViewController {
     
     let placeLabel : UILabel = {
         let label = UILabel()
-        label.text = "Name"
+        label.text = "Name:"
         return label
     }()
     
@@ -31,13 +31,13 @@ class CreateDetailsController: UIViewController {
     
     let commentLabel : UILabel = {
         let label = UILabel()
-        label.text = "Comment"
+        label.text = "Comment:"
         return label
     }()
     
     let commentTextField : UITextField = {
         let tf = UITextField()
-        tf.placeholder = "Enter your impression or description"
+        tf.placeholder = "Enter your impression"
         return tf
     }()
     
@@ -63,7 +63,7 @@ class CreateDetailsController: UIViewController {
         
         setupUI()
         
-        navigationItem.title = "Add trip places"
+        navigationItem.title = "Create new place"
     }
     
     @objc func handleSave() {
@@ -103,6 +103,7 @@ class CreateDetailsController: UIViewController {
         view.addSubview(placeTextField)
         placeTextField.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: placeLabel.rightAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         placeTextField.centerYAnchor.constraint(equalTo: placeLabel.centerYAnchor).isActive = true
+        placeTextField.delegate = self
         
         // Comment place label
         view.addSubview(commentLabel)
@@ -112,6 +113,7 @@ class CreateDetailsController: UIViewController {
         view.addSubview(commentTextField)
         commentTextField.anchor(top: placeTextField.bottomAnchor, left: commentLabel.rightAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         commentTextField.centerYAnchor.constraint(equalTo: commentLabel.centerYAnchor).isActive = true
+        commentTextField.delegate = self
         
         // Place Segmented control
         view.addSubview(placeSegmentedControl)

@@ -24,7 +24,7 @@ class TripDetailsController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        navigationItem.title = trip?.place
+        navigationItem.title = "Add place"
         view.backgroundColor = .darkBlue
         
         setupPlusButton(selector: #selector(addTripDetails))

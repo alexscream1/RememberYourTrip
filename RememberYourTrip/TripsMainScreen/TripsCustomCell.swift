@@ -16,7 +16,7 @@ class TripsCustomCell: UITableViewCell {
             
             if let imageData = trip?.imageData {
                 tripImageView.image = UIImage(data: imageData)
-            }
+            } 
             
             guard let money = trip?.moneySpend else { return }
             if money.isNumeric {
@@ -39,7 +39,7 @@ class TripsCustomCell: UITableViewCell {
     
     let tripImageView : UIImageView = {
         let iv = UIImageView()
-        iv.image = #imageLiteral(resourceName: "select_photo_empty")
+        iv.image = UIImage(named: "select_photo_empty")
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
         return iv

@@ -72,7 +72,8 @@ extension TripsController {
     // TableView Footer
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let label = UILabel()
-        label.text = "No trips are available.."
+        label.numberOfLines = 0
+        label.text = "No trips are available\n\nPress plus button to add new trip"
         label.textAlignment = .center
         label.textColor = .white
         label.font = UIFont.boldSystemFont(ofSize: 18)
@@ -83,18 +84,7 @@ extension TripsController {
         return trips.count == 0 ? 150 : 0
     }
     
-    // TableView Header
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let view = UIView()
-        view.backgroundColor = .lightBlue
-        return view
-    }
-    
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 50
-    }
-    
-    
+
     
     // MARK: - UITableViewDataSource
     

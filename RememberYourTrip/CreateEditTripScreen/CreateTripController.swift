@@ -34,14 +34,14 @@ class CreateTripController: UIViewController {
             if let imageData = trip?.imageData {
                 tripImageView.image = UIImage(data: imageData)
                 setupCircularImageStyle()
-            }
+            } 
             
         }
     }
     
     let placeLabel : UILabel = {
         let label = UILabel()
-        label.text = "Place"
+        label.text = "Place:"
         return label
     }()
     
@@ -53,7 +53,7 @@ class CreateTripController: UIViewController {
     
     let moneyLabel : UILabel = {
         let label = UILabel()
-        label.text = "Money"
+        label.text = "Money:"
         return label
     }()
     
@@ -63,14 +63,28 @@ class CreateTripController: UIViewController {
         return tf
     }()
     
+    let startLabel : UILabel = {
+        let label = UILabel()
+        label.text = "Start date:"
+        return label
+    }()
+    
     let startedDatePicker : UIDatePicker = {
         let dp = UIDatePicker()
         dp.datePickerMode = .date
+        dp.tintColor = .darkBlue
         return dp
+    }()
+    
+    let finishLabel : UILabel = {
+        let label = UILabel()
+        label.text = "Finish date:"
+        return label
     }()
     
     let finishedDatePicker : UIDatePicker = {
         let dp = UIDatePicker()
+        dp.tintColor = .darkBlue
         dp.datePickerMode = .date
         return dp
     }()
@@ -123,12 +137,19 @@ class CreateTripController: UIViewController {
     }
     
     private func createTrip() {
+        guard let tripName = placeTextField.text else { return }
+        
+        if tripName == "" {
+            showError(title: "Empty form", message: "Enter name of your trip")
+            return
+        }
+        
         // Initialize Core Data Stack
         let context = CoreDataManager.shared.persistentContainer.viewContext
         
         let trip = NSEntityDescription.insertNewObject(forEntityName: "Trip", into: context)
         
-        trip.setValue(placeTextField.text, forKey: "place")
+        trip.setValue(tripName, forKey: "place")
         trip.setValue(startedDatePicker.date, forKey: "started")
         trip.setValue(finishedDatePicker.date, forKey: "finished")
         trip.setValue(moneyTextField.text, forKey: "moneySpend")
@@ -136,7 +157,7 @@ class CreateTripController: UIViewController {
         if let tripImage = tripImageView.image {
             let imageData = tripImage.jpegData(compressionQuality: 0.8)
             trip.setValue(imageData, forKey: "imageData")
-        }
+        } 
   
         // Perform save to core data
         do {
@@ -179,7 +200,7 @@ class CreateTripController: UIViewController {
     private func setupUI() {
         
         // Background view
-        let backgroundView = setupBackgroundView(height: 400)
+        _ = setupBackgroundView(height: 340)
         
         
         // Image View
@@ -195,6 +216,7 @@ class CreateTripController: UIViewController {
         view.addSubview(placeTextField)
         placeTextField.anchor(top: placeLabel.topAnchor, left: placeLabel.rightAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         placeTextField.centerYAnchor.constraint(equalTo: placeLabel.centerYAnchor).isActive = true
+        placeTextField.delegate = self
         
         // Trip Money label
         view.addSubview(moneyLabel)
@@ -204,14 +226,26 @@ class CreateTripController: UIViewController {
         view.addSubview(moneyTextField)
         moneyTextField.anchor(top: moneyLabel.topAnchor, left: moneyLabel.rightAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         moneyTextField.centerYAnchor.constraint(equalTo: moneyLabel.centerYAnchor).isActive = true
+        moneyTextField.delegate = self
        
+        // Trip started label
+        view.addSubview(startLabel)
+        startLabel.anchor(top: moneyLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 16, paddingBottom: 0, paddingRight: 0, width: 100, height: 50)
+        
+        
         // Date Started datepicker
         view.addSubview(startedDatePicker)
-        startedDatePicker.anchor(top: moneyLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 50)
+        startedDatePicker.anchor(top: startLabel.topAnchor, left: startLabel.rightAnchor, bottom: startLabel.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        
+        
+        // Trip finished label
+        view.addSubview(finishLabel)
+        finishLabel.anchor(top: startLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 16, paddingBottom: 0, paddingRight: 0, width: 100, height: 50)
         
         // Date Finished datepicker
         view.addSubview(finishedDatePicker)
-        finishedDatePicker.anchor(top: startedDatePicker.bottomAnchor, left: view.leftAnchor, bottom: backgroundView.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        finishedDatePicker.anchor(top: finishLabel.topAnchor, left: finishLabel.rightAnchor, bottom: finishLabel.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        
     }
     
     func setupCircularImageStyle() {

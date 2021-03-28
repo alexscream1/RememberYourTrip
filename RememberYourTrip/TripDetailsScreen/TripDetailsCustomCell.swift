@@ -43,6 +43,7 @@ class TripDetailsCustomCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = .tealColor
+        isUserInteractionEnabled = false
         setupUI()
     }
     
@@ -52,7 +53,7 @@ class TripDetailsCustomCell: UITableViewCell {
 
         
         addSubview(commentTextView)
-        commentTextView.anchor(top: topAnchor, left: placeNameLabel.rightAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 4, paddingBottom: 0, paddingRight: 4, width: 0, height: 0)
+        commentTextView.anchor(top: placeNameLabel.topAnchor, left: placeNameLabel.rightAnchor, bottom: placeNameLabel.bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 4, paddingBottom: 0, paddingRight: 4, width: 0, height: 0)
     }
     
     required init?(coder: NSCoder) {

@@ -22,3 +22,11 @@ extension TripDetailsController: CreateDetailsControllerDelegate {
         tableView.insertRows(at: [insertionIndexPath], with: .middle)
     }
 }
+
+extension CreateDetailsController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+}
